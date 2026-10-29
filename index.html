@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ylandphoto | Event photography by Aubs</title>
+  <meta name="description" content="Event photography portfolio and personal site for Aubs. Press the shutter to develop a print.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Rough-edge texture for the big headlines -->
+  <svg width="0" height="0" aria-hidden="true" style="position:absolute">
+    <filter id="rough" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+  <a class="skip" href="#about">Skip to content</a>
+
+  <header class="bar">
+    <a class="mark" href="#top">ylandphoto</a>
+    <nav aria-label="Main">
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#gallery">Gallery</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="splash">
+      <h1>yland<br>photo</h1>
+      <div class="splash-text">
+        <p class="tag">Club &amp; event photography</p>
+        <p class="serif">I shoot the moment people forget to pose.</p>
+        <p>Hi, I'm Aubs. I photograph club events and I'm building the tools to deliver them. Below is my story, my skills and my work. There is also a camera in the corner, and it works.</p>
+        <p class="hint-line">Look bottom right, then press the shutter.</p>
+      </div>
+    </section>
+
+    <section id="about" class="block">
+      <h2>About me</h2>
+      <div class="two">
+        <p>I'm Aubrey, but call me Aubs. I got bored, and I'm friends with Digital Multimedia Design students. It started in June, before our winter term. They had to buy a camera for their class, so I joined in the fun too, even though my discipline is Accountancy.</p>
+        <p>I mainly shoot for clubs right now to build up my portfolio, and I plan to hone my skills further.</p>
+      </div>
+    </section>
+
+    <section id="skills" class="block">
+      <h2>Skills <span class="serif">and tech superpowers</span></h2>
+      <div class="cols">
+        <div class="panel">
+          <h3>On the shoot</h3>
+          <ul>
+            <li>Event coverage, from run sheet to last guest</li>
+            <li>Low-light and fast-moving rooms</li>
+            <li>Culling hundreds of frames down to the keepers</li>
+            <li>Consistent editing look across a whole gallery</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Behind the screen</h3>
+          <ul>
+            <li>HTML, CSS and JavaScript</li>
+            <li>Git and GitHub</li>
+            <li>AWS Amplify Hosting</li>
+            <li>Building with AI coding agents</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="block">
+      <h2>Projects <span class="serif">and achievements</span></h2>
+      <article class="project">
+        <h3>Pilates shoot: Swinfit x ACE Studios</h3>
+        <p class="meta">October 2026 &middot; Club event photography</p>
+        <p>An event in collaboration with the Swinfit club and ACE Studios. I shot around 100 frames.</p>
+      </article>
+      <article class="project">
+        <h3>This portfolio</h3>
+        <p class="meta">October to November 2026 &middot; AWS Student Builder Challenge</p>
+        <p>A hand-written static site hosted with AWS Amplify Hosting, with a working camera shutter that develops a print. Photos stay in Google Drive and web-sized copies are served from the site.</p>
+      </article>
+    </section>
+
+    <section id="gallery" class="block">
+      <h2>Gallery</h2>
+      <p class="view-all">Selected frames</p>
+      <p class="note">Selected frames from recent events. Shared with the permission of the people in them.</p>
+      <div class="grid" id="grid" data-layout="mosaic"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="foot-tag serif">Unposed, on purpose.</p>
+    <p class="foot-mark" aria-hidden="true">ylandphoto</p>
+    <div class="foot-row">
+      <p>&copy; 2026 Aubrey (Aubs) &middot; ylandphoto</p>
+      <p><a href="mailto:email-hidden">email-hidden</a> &middot; <a href="https://instagram.com/y.rey_info" rel="noopener">Instagram @y.rey_info</a></p>
+    </div>
+  </footer>
+
+  <button id="shutter" class="shutter" type="button" aria-label="Press the shutter to develop a print. Keyboard shortcut: S.">
+    <span class="lens" aria-hidden="true"></span>
+    <span class="tip" aria-hidden="true">Press the shutter <kbd>S</kbd></span>
+  </button>
+  <div id="flash" class="flash" aria-hidden="true"></div>
+
+  <aside id="print" class="print" hidden aria-live="polite" aria-label="Developed print">
+    <button id="print-close" class="close" type="button" aria-label="Close print">&times;</button>
+    <div class="frame" id="print-frame"></div>
+    <p class="cap" id="print-cap"></p>
+    <p class="roll" id="print-roll"></p>
+  </aside>
+
+  <script src="photos.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
