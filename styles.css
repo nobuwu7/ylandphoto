@@ -135,6 +135,7 @@ body.lb-open { overflow: hidden; }
 .print.developing .frame > * { animation: develop 3.2s ease-out forwards; }
 @keyframes develop { 0% { filter: brightness(0) contrast(2); opacity: 0.2; } 60% { filter: brightness(0.6) grayscale(1); opacity: 0.8; } 100% { filter: none; opacity: 1; } }
 .print .cap { margin: 10px 4px 2px; font-family: var(--serif); font-style: italic; font-size: 1.2rem; }
+.print .sub { margin: 0 4px 2px; font-size: 0.82rem; color: #333; line-height: 1.3; }
 .print .roll { margin: 4px 4px 0; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: #555; }
 .close { position: absolute; top: -14px; right: -14px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--bg); background: var(--ink); color: var(--bg); font-size: 1.2rem; cursor: pointer; line-height: 1; }
 .close:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }

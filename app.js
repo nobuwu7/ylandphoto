@@ -4,19 +4,15 @@
   var PHOTOS = window.PHOTOS || [];
   var ROLL = 36;
 
-  // Each print is named after a kind of shot. They come out in a shuffled order,
-  // and every shot appears once before any repeats.
-  var SHOTS = [
-    "Wide shot", "Medium shot", "Close-up", "Detail shot",
-    "Dutch angle", "Extreme close-up", "Cowboy shot", "Medium full shot",
-    "Full shot", "Bird's-eye view", "American shot", "Point of view",
-    "Over-the-shoulder", "Two-shot", "Three-shot", "Over-the-hip"
-  ];
+  // The Shutter develops Aubs's own photos in a shuffled order, and every photo
+  // appears once before any repeats. Each print is named with that photo's real
+  // shot type, which is set as "shot" in photos.js. Credited photos stay out.
+  var own = PHOTOS.filter(function (p) { return p.src && !p.credit; });
   var deck = [];
 
-  function nextShot() {
+  function nextPhoto() {
     if (!deck.length) {
-      deck = SHOTS.slice();
+      deck = own.slice();
       for (var i = deck.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         var tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
@@ -177,6 +173,7 @@
   var frame = document.getElementById("print-frame");
   var cap = document.getElementById("print-cap");
   var roll = document.getElementById("print-roll");
+  var sub = document.getElementById("print-sub");
   var closeBtn = document.getElementById("print-close");
   var tip = btn && btn.querySelector(".tip");
   var exposure = 0;
@@ -220,14 +217,12 @@
     click();
     doFlash();
 
-    // Prints only use photos Aubs took herself; credited photos stay in the gallery.
-    var own = PHOTOS.filter(function (p) { return !p.credit; });
-    var idx = Math.floor(Math.random() * Math.max(own.length, 1));
-    var photo = own.length ? own[idx] : { title: "Frame" };
+    var photo = own.length ? nextPhoto() : { title: "Frame" };
 
     frame.innerHTML = "";
-    frame.appendChild(media(photo, idx));
-    cap.textContent = nextShot();
+    frame.appendChild(media(photo, 0));
+    cap.textContent = photo.shot || "Frame";
+    sub.textContent = photo.event || "";
     roll.textContent = "Exposure " + exposure + " of " + ROLL;
 
     print.hidden = false;
@@ -241,6 +236,7 @@
     frame.innerHTML = "";
     frame.appendChild(placeholder(0, "ROLL FINISHED"));
     cap.textContent = "That is all 36. Reload the page to load a fresh roll.";
+    sub.textContent = "";
     roll.textContent = "Exposure " + ROLL + " of " + ROLL;
     print.hidden = false;
     print.classList.remove("developing");
