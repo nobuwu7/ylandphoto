@@ -67,17 +67,19 @@ li { margin-bottom: 6px; }
 .meta { color: var(--muted); font-size: 0.86rem; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
 .note { color: var(--muted); font-size: 0.92rem; }
 
-/* Photo wall: tall and wide framed tiles packed tight. */
+/* Photo wall: justified rows. Each photo keeps its real shape, and every row fills the width. */
 .grid { margin-top: 20px; }
-.layout-mosaic { display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 150px; grid-auto-flow: dense; gap: 8px; }
-.layout-mosaic .tile:nth-child(6n + 1) { grid-column: span 2; grid-row: span 3; }
-.layout-mosaic .tile:nth-child(6n + 2) { grid-row: span 2; }
-.layout-mosaic .tile:nth-child(6n + 4) { grid-column: span 2; grid-row: span 2; }
-.layout-mosaic .tile:nth-child(6n + 5) { grid-row: span 2; }
+.layout-rows { display: flex; flex-wrap: wrap; gap: 8px; }
+.layout-rows::after { content: ""; flex-grow: 100000; }
+.layout-rows .tile { flex: calc(var(--ar) * 100) 1 calc(var(--ar) * 260px); aspect-ratio: var(--ar); min-width: 0; }
 .tile { position: relative; overflow: hidden; margin: 0; background: #1a1a1a; border: 2px solid var(--ink); }
-.tile img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(0.25) contrast(1.05); }
+.tile-btn { position: absolute; inset: 0; display: block; width: 100%; height: 100%; padding: 0; margin: 0; border: 0;
+  background: none; color: inherit; font: inherit; text-align: left; cursor: zoom-in; }
+.tile-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: -6px; }
+.tile img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(0.25) contrast(1.05); transition: filter 0.25s; }
+.tile-btn:hover img, .tile-btn:focus-visible img { filter: none; }
 .tile .cap { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(34, 34, 34, 0.92); color: #eee;
-  font-size: 0.78rem; font-weight: 600; padding: 7px 10px; letter-spacing: 0.02em; }
+  font-size: 0.78rem; font-weight: 600; padding: 7px 10px; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ph { width: 100%; height: 100%; display: grid; place-items: center; color: rgba(255,255,255,0.6); font-family: var(--serif); font-style: italic; filter: grayscale(0.75); }
 
 footer { max-width: 1180px; margin: 96px auto 0; padding: 0 24px 110px; color: var(--muted); font-size: 0.9rem; }
@@ -86,6 +88,30 @@ footer p { margin: 0; }
 .foot-mark { color: var(--ink); font-weight: 900; font-size: clamp(3.4rem, 17vw, 12.5rem); line-height: 1; letter-spacing: -0.06em;
   filter: url(#rough); margin-bottom: 20px !important; padding-bottom: 0.06em; }
 .foot-row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
+
+/* ---- Photo viewer ---- */
+body.lb-open { overflow: hidden; }
+.lightbox { position: fixed; inset: 0; z-index: 70; background: rgba(4, 4, 4, 0.97); display: flex; flex-direction: column; }
+.lightbox[hidden] { display: none; }
+.lb-top { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; color: var(--muted);
+  font-size: 0.86rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.lb-close { background: var(--ink); color: var(--bg); border: 0; padding: 8px 16px; font: 700 0.86rem var(--sans); letter-spacing: 0.06em;
+  text-transform: uppercase; cursor: pointer; }
+.lb-close:focus-visible, .lb-nav:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.lb-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; padding: 0 20px 20px; }
+.lb-stage { position: relative; min-height: 0; display: grid; place-items: center; }
+.lb-stage img { display: block; max-width: 100%; max-height: calc(100vh - 100px); width: auto; height: auto; object-fit: contain; }
+.lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--ink); background: rgba(8, 8, 8, 0.72); color: var(--ink); font-size: 1.9rem; line-height: 1; cursor: pointer; }
+.lb-prev { left: 6px; }
+.lb-next { right: 6px; }
+.lb-info { align-self: end; background: var(--ink); color: var(--bg); padding: 22px 24px 24px; }
+.lb-info h3 { margin: 0 0 6px; font: 900 1.6rem/1.08 var(--sans); letter-spacing: -0.03em; }
+.lb-info .meta { color: #444; margin: 0; }
+.lb-desc { margin: 14px 0 16px; font-size: 1rem; line-height: 1.5; }
+.lb-specs { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 0; padding-top: 14px; border-top: 1px solid #bbb; }
+.lb-specs dt { color: #444; font-size: 0.8rem; letter-spacing: 0.07em; text-transform: uppercase; align-self: center; }
+.lb-specs dd { margin: 0; font-weight: 700; font-size: 1.05rem; }
 
 /* ---- Shutter ---- */
 .shutter { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 66px; height: 66px; border-radius: 50%; border: 2px solid var(--ink);
@@ -125,13 +151,18 @@ footer p { margin: 0; }
   main { padding: 0 16px; }
   .splash { grid-template-columns: 1fr; gap: 24px; padding: 48px 0 32px; }
   .cols, .projects { grid-template-columns: 1fr; }
-  .about { grid-template-columns: 1fr; gap: 20px; }  .layout-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; }
-  .layout-mosaic .tile:nth-child(6n + 4), .layout-mosaic .tile:nth-child(6n + 1) { grid-column: span 2; }
-  .layout-mosaic .tile:nth-child(6n + 1) { grid-row: span 2; }
+  .about { grid-template-columns: 1fr; gap: 20px; }
   footer { padding: 0 16px 100px; }
   h2 { padding: 12px 16px 9px; }
   .panel { padding: 18px 18px; }
-  .layout-mosaic { gap: 6px; }
+  .layout-rows { gap: 6px; }
+  .layout-rows .tile { flex-basis: calc(var(--ar) * 150px); }
+  .lb-top { padding: 10px 16px; }
+  .lb-body { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; padding: 0 12px 12px; }
+  .lb-stage img { max-height: calc(100vh - 340px); }
+  .lb-info { align-self: stretch; padding: 16px 18px 18px; }
+  .lb-info h3 { font-size: 1.25rem; }
+  .lb-nav { width: 44px; height: 44px; }
   .tip { display: none; }
   .shutter { right: 16px; bottom: 16px; }
   .print { right: 16px; bottom: 94px; width: 230px; }

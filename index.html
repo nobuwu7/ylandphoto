@@ -141,8 +141,8 @@
     <section id="gallery" class="block">
       <h2>Gallery</h2>
       <p class="view-all">Selected frames</p>
-      <p class="note">Selected frames from recent events. Shared with the permission of the people in them.</p>
-      <div class="grid" id="grid" data-layout="mosaic"></div>
+      <p class="note">Selected frames from recent events. Shared with the permission of the people in them. Click any photo to see it in full with its camera details.</p>
+      <div class="grid" id="grid" data-layout="rows"></div>
     </section>
   </main>
 
@@ -154,6 +154,27 @@
       <p><a href="mailto:email-hidden">email-hidden</a> &middot; <a href="https://instagram.com/y.rey_info" rel="noopener">Instagram @y.rey_info</a></p>
     </div>
   </footer>
+
+  <!-- Photo viewer: opens when a gallery photo is clicked -->
+  <div id="lightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <div class="lb-top">
+      <span id="lb-count"></span>
+      <button id="lb-close" class="lb-close" type="button" aria-label="Close photo viewer">Close &times;</button>
+    </div>
+    <div class="lb-body">
+      <div class="lb-stage" id="lb-stage">
+        <button id="lb-prev" class="lb-nav lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+        <img id="lb-img" alt="">
+        <button id="lb-next" class="lb-nav lb-next" type="button" aria-label="Next photo">&#8250;</button>
+      </div>
+      <aside class="lb-info">
+        <h3 id="lb-event"></h3>
+        <p id="lb-date" class="meta"></p>
+        <p id="lb-desc" class="lb-desc"></p>
+        <dl id="lb-specs" class="lb-specs"></dl>
+      </aside>
+    </div>
+  </div>
 
   <button id="shutter" class="shutter" type="button" aria-label="Press the shutter to develop a print. Keyboard shortcut: S.">
     <span class="lens" aria-hidden="true"></span>
