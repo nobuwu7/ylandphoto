@@ -43,6 +43,7 @@
       img.src = photo.src;
       img.alt = photo.alt || photo.title || "";
       img.loading = "lazy";
+      if (photo.pos) img.style.objectPosition = photo.pos;
       return img;
     }
     return placeholder(i, photo.title || "Frame");
