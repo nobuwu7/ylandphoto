@@ -108,6 +108,7 @@ body.lb-open { overflow: hidden; }
 .lb-info { align-self: end; background: var(--ink); color: var(--bg); padding: 22px 24px 24px; }
 .lb-info h3 { margin: 0 0 6px; font: 900 1.6rem/1.08 var(--sans); letter-spacing: -0.03em; }
 .lb-info .meta { color: #444; margin: 0; }
+.lb-credit { margin: 6px 0 0; font-weight: 700; font-size: 0.95rem; }
 .lb-desc { margin: 14px 0 16px; font-size: 1rem; line-height: 1.5; }
 .lb-specs { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 0; padding-top: 14px; border-top: 1px solid #bbb; }
 .lb-specs dt { color: #444; font-size: 0.8rem; letter-spacing: 0.07em; text-transform: uppercase; align-self: center; }

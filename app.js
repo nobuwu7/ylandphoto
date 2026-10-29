@@ -60,12 +60,12 @@
       tile.style.setProperty("--ar", p.w && p.h ? (p.w / p.h).toFixed(4) : "1.5");
       var cap = document.createElement("figcaption");
       cap.className = "cap";
-      cap.textContent = p.event || p.title || "";
+      cap.textContent = (p.event || p.title || "") + (p.credit ? " · Photo: " + p.credit : "");
       if (p.src) {
         var b = document.createElement("button");
         b.type = "button";
         b.className = "tile-btn";
-        b.setAttribute("aria-label", "View larger: " + (p.event || "photo") + ". " + (p.alt || ""));
+        b.setAttribute("aria-label", "View larger: " + (p.event || "photo") + (p.credit ? ", photo by " + p.credit : "") + ". " + (p.alt || ""));
         b.appendChild(media(p, i));
         b.appendChild(cap);
         b.addEventListener("click", function () { openViewer(i, b); });
@@ -84,6 +84,7 @@
   var lbEvent = document.getElementById("lb-event");
   var lbDate = document.getElementById("lb-date");
   var lbDesc = document.getElementById("lb-desc");
+  var lbCredit = document.getElementById("lb-credit");
   var lbSpecs = document.getElementById("lb-specs");
   var lbCount = document.getElementById("lb-count");
   var lbClose = document.getElementById("lb-close");
@@ -102,6 +103,8 @@
     lbEvent.textContent = p.event || "";
     lbDate.textContent = p.date || "";
     lbDate.hidden = !p.date;
+    lbCredit.textContent = p.credit ? "Photo by " + p.credit : "";
+    lbCredit.hidden = !p.credit;
     lbDesc.textContent = p.alt || "";
     lbCount.textContent = (viewing + 1) + " / " + PHOTOS.length;
 
@@ -217,8 +220,10 @@
     click();
     doFlash();
 
-    var idx = Math.floor(Math.random() * Math.max(PHOTOS.length, 1));
-    var photo = PHOTOS.length ? PHOTOS[idx] : { title: "Frame" };
+    // Prints only use photos Aubs took herself; credited photos stay in the gallery.
+    var own = PHOTOS.filter(function (p) { return !p.credit; });
+    var idx = Math.floor(Math.random() * Math.max(own.length, 1));
+    var photo = own.length ? own[idx] : { title: "Frame" };
 
     frame.innerHTML = "";
     frame.appendChild(media(photo, idx));
