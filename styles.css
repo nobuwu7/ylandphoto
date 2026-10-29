@@ -43,9 +43,11 @@ h2 .serif { font-size: 0.5em; letter-spacing: 0; color: #3a3a3a; margin-left: 10
 h3 { margin: 0 0 8px; font-size: 1.05rem; font-weight: 700; }
 .view-all { margin: 0 0 12px; background: var(--ink); color: var(--bg); padding: 10px 22px 14px;
   font: italic 400 clamp(1.6rem, 4.5vw, 2.8rem)/1.1 var(--serif); }
-/* About text flows into two columns that balance themselves. */
-.two { columns: 2; column-gap: 48px; max-width: 980px; }
-.two p { margin: 0 0 14px; orphans: 2; widows: 2; }
+/* About: a big lead statement on the left, the story on the right. */
+.about { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+.about .lead { margin: 0; color: var(--ink); font-size: clamp(1.5rem, 2.6vw, 2.6rem); line-height: 1.16; font-weight: 800; letter-spacing: -0.03em; }
+.about-body p { margin: 0 0 16px; font-size: clamp(1.05rem, 1.2vw, 1.25rem); line-height: 1.6; }
+.about-body p:last-child { margin-bottom: 0; }
 .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .stack p { margin: 0 0 14px; }
 .learning { margin: 18px 0 0; max-width: 70ch; }
@@ -119,7 +121,7 @@ footer p { margin: 0; }
   main { padding: 0 16px; }
   .splash { grid-template-columns: 1fr; gap: 24px; padding: 48px 0 32px; }
   .cols, .projects { grid-template-columns: 1fr; }
-  .two { columns: 1; }
+  .about { grid-template-columns: 1fr; gap: 20px; }
   .layout-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; }
   .layout-mosaic .tile:nth-child(6n + 4), .layout-mosaic .tile:nth-child(6n + 1) { grid-column: span 2; }
   .layout-mosaic .tile:nth-child(6n + 1) { grid-row: span 2; }
@@ -130,4 +132,10 @@ footer p { margin: 0; }
   .tip { display: none; }
   .shutter { right: 16px; bottom: 16px; }
   .print { right: 16px; bottom: 94px; width: 230px; }
+}
+
+/* Wide screens: a little more room and slightly larger text. */
+@media (min-width: 1500px) {
+  body { font-size: 19px; }
+  main, footer { max-width: 1320px; }
 }
