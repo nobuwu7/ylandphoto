@@ -34,6 +34,9 @@ h1 { margin: 0; font-weight: 900; font-size: clamp(4rem, 16vw, 11.5rem); line-he
 .splash-text .serif { color: var(--ink); font-size: 1.6rem; line-height: 1.2; }
 .tag { display: inline-block; background: var(--ink); color: var(--bg) !important; font-size: 0.78rem; font-weight: 700; padding: 5px 12px; text-transform: uppercase; letter-spacing: 0.06em; }
 .hint-line { color: var(--ink) !important; font-weight: 700; }
+/* The mantra: a big italic panel closing out the hero. */
+.mantra { margin: 0 0 40px; background: var(--ink); color: var(--bg); padding: 18px 28px 26px;
+  font: italic 400 clamp(2.2rem, 6.4vw, 6rem)/1.02 var(--serif); letter-spacing: -0.02em; }
 
 .block { border-top: 1px solid var(--line); padding: 48px 0 24px; scroll-margin-top: 64px; }
 /* Section titles sit in rough white panels, like cut-out headlines. */
@@ -60,6 +63,7 @@ li { margin-bottom: 6px; }
 .project { border: 1px solid #3a3a3a; background: var(--panel); padding: 20px 22px; }
 .project h3 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
 .project p:last-child { margin: 0; }
+.project:last-child:nth-child(odd) { grid-column: 1 / -1; }
 .meta { color: var(--muted); font-size: 0.86rem; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
 .note { color: var(--muted); font-size: 0.92rem; }
 
