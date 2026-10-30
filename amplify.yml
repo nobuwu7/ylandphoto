@@ -1,0 +1,16 @@
+# AWS Amplify Hosting build settings. This is a plain static site: nothing to build.
+# Only the site's own files are published, so backend/, docs/ and the README stay off the live URL.
+version: 1
+frontend:
+  phases:
+    build:
+      commands:
+        - echo "Static site, nothing to build"
+  artifacts:
+    baseDirectory: /
+    files:
+      - index.html
+      - '*.css'
+      - '*.js'
+      - 'photos/**/*'
+      - 'videos/**/*'
