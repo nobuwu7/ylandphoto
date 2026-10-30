@@ -1,6 +1,6 @@
 # ylandphoto
 
-Event photography portfolio and personal site for Aubrey ("Aubs"). Built for the AWS Student Builder Challenge.
+Event photography portfolio and personal site for Aubrey ("Aubs"). Hosted on AWS Amplify Hosting.
 
 **Creative feature: the Shutter.** Press the camera button in the bottom-right corner (or hit `S`) and a print develops with the name of a camera shot type. A roll holds 36 exposures.
 
