@@ -46,4 +46,16 @@ async function sendMail(to, code) {
   }));
 }
 
-export const handler = createHandler({ store, sendMail, env, now });
+async function sendMessage({ replyTo, name, text }) {
+  await ses.send(new SendEmailCommand({
+    FromEmailAddress: env.FROM,
+    Destination: { ToAddresses: [env.CONTACT] },
+    ReplyToAddresses: [replyTo],
+    Content: { Simple: {
+      Subject: { Data: "Portfolio message from " + name },
+      Body: { Text: { Data: name + " (" + replyTo + ", verified by emailed code) wrote:\n\n" + text + "\n" } }
+    } }
+  }));
+}
+
+export const handler = createHandler({ store, sendMail, sendMessage, env, now });

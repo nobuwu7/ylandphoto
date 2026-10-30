@@ -212,24 +212,60 @@
   </aside>
 
 
-  <!-- Email reveal: the visitor proves their address with a 6-digit code before mine is shown -->
+  <!-- Contact flow: verify the visitor's email with a 6-digit code, then they write me a message -->
   <dialog id="reveal" class="reveal" aria-labelledby="reveal-title">
-    <form method="dialog" class="reveal-x"><button class="lb-close" aria-label="Close">Close &times;</button></form>
-    <h3 id="reveal-title">Want my email?</h3>
-    <p id="reveal-help" class="reveal-help">It keeps the bots out. Give me your email and I'll send you a 6-digit code.</p>
-    <form id="reveal-send" class="reveal-form" novalidate>
-      <label for="reveal-addr">Your email</label>
-      <input id="reveal-addr" type="email" autocomplete="email" inputmode="email" required>
-      <input id="reveal-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
-      <button class="btn" type="submit">Send code</button>
-    </form>
-    <form id="reveal-check" class="reveal-form" hidden novalidate>
-      <label for="reveal-code">6-digit code</label>
-      <input id="reveal-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
-      <button class="btn" type="submit">Show my email</button>
-      <button id="reveal-again" class="linkbtn" type="button">Use a different email</button>
-    </form>
-    <p id="reveal-out" class="reveal-out" hidden></p>
+    <div class="rv-top">
+      <div class="rv-bar" role="progressbar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1"><span id="rv-fill"></span></div>
+      <span id="rv-step" class="rv-step">1 of 3</span>
+      <form method="dialog"><button class="lb-close" aria-label="Close">Close &times;</button></form>
+    </div>
+
+    <section id="rv-1" class="rv-pane">
+      <h3 id="reveal-title">Which email should I reply to?</h3>
+      <p id="reveal-help" class="reveal-help">I'll send you a 6-digit code first. It keeps the bots out.</p>
+      <form id="reveal-send" class="reveal-form" novalidate>
+        <label for="reveal-addr">Email address</label>
+        <input id="reveal-addr" type="email" autocomplete="email" inputmode="email" required>
+        <input id="reveal-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+        <button class="btn" type="submit">Send me a code &rarr;</button>
+      </form>
+    </section>
+
+    <section id="rv-2" class="rv-pane" hidden>
+      <h3>Check your email</h3>
+      <p id="rv-sent" class="reveal-help"></p>
+      <form id="reveal-check" class="reveal-form" novalidate>
+        <div class="rv-code" role="group" aria-label="6-digit code">
+          <input inputmode="numeric" autocomplete="one-time-code" maxlength="1" aria-label="Digit 1">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 2">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 3">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 4">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 5">
+          <input inputmode="numeric" maxlength="1" aria-label="Digit 6">
+        </div>
+        <button class="btn" type="submit">Verify</button>
+        <button id="reveal-again" class="linkbtn" type="button">Use a different email</button>
+      </form>
+    </section>
+
+    <section id="rv-3" class="rv-pane" hidden>
+      <h3>Write me a message</h3>
+      <p class="rv-verified"><span aria-hidden="true">&#10003;</span> <span id="rv-from"></span> is verified</p>
+      <form id="reveal-write" class="reveal-form rv-draft" novalidate>
+        <label for="rv-name">Your name</label>
+        <input id="rv-name" type="text" autocomplete="name" maxlength="80" required>
+        <label for="rv-msg">Message</label>
+        <textarea id="rv-msg" rows="7" maxlength="2000"></textarea>
+        <button class="btn" type="submit">Send mail</button>
+      </form>
+    </section>
+
+    <section id="rv-4" class="rv-pane" hidden>
+      <h3>Sent. Thank you!</h3>
+      <p class="reveal-help">I'll reply to your email soon. If it's urgent, you can also write me directly:</p>
+      <p id="reveal-out" class="reveal-out"></p>
+    </section>
+
     <p id="reveal-msg" class="reveal-msg" role="status" aria-live="polite"></p>
   </dialog>
 

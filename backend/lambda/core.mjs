@@ -6,11 +6,14 @@ const MAX_ATTEMPTS = 5;      // wrong guesses before the code is burned
 const COOLDOWN = 60;         // seconds between codes to the same address
 const PER_EMAIL_HOUR = 3;
 const PER_IP_HOUR = 10;
+const TOKEN_TTL = 900;       // after verifying, 15 minutes to write the message
+const MSG_PER_HOUR = 3;
 const GLOBAL_DAY = 150;      // hard ceiling on emails per day, so cost can never run away
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
-export function createHandler({ store, sendMail, env, now = () => Math.floor(Date.now() / 1000) }) {
+export function createHandler({ store, sendMail, sendMessage, env, now = () => Math.floor(Date.now() / 1000) }) {
   const hash = (email, code) => createHmac("sha256", env.PEPPER).update(email + ":" + code).digest("hex");
+  const sign = (email, exp) => createHmac("sha256", env.PEPPER).update("msg:" + email + ":" + exp).digest("hex");
   const same = (a, b) => a.length === b.length && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
   const reply = (status, body) => ({
@@ -70,6 +73,33 @@ export function createHandler({ store, sendMail, env, now = () => Math.floor(Dat
       return reply(400, { error: "That code didn't work." });
     }
     await store.del("code#" + email);                              // one use only
+    const exp = now() + TOKEN_TTL;
+    return reply(200, { ok: true, token: exp + "." + sign(email, exp) });
+  }
+
+  // The verified visitor writes to me through the site; their address becomes Reply-To.
+  async function message(body, ip) {
+    const email = String(body.email || "").trim().toLowerCase();
+    const [exp, sig] = String(body.token || "").split(".");
+    if (!EMAIL_RE.test(email) || !exp || !sig || Number(exp) < now() || !same(sig, sign(email, exp))) {
+      return reply(403, { error: "Please verify your email again." });
+    }
+    const name = String(body.name || "").replace(/[\r\n]+/g, " ").trim().slice(0, 80);
+    const text = String(body.message || "").trim();
+    if (!name) return reply(400, { error: "Add your name." });
+    if (text.length < 10 || text.length > 2000) return reply(400, { error: "Write between 10 and 2000 characters." });
+    const hour = Math.floor(now() / 3600), day = Math.floor(now() / 86400);
+    if ((await store.incr("rate#global#" + day, 86400 * 2)) > GLOBAL_DAY ||
+        (await store.incr("rate#msg#" + email + "#" + hour, 7200)) > MSG_PER_HOUR ||
+        (await store.incr("rate#ip#" + ip + "#" + hour, 7200)) > PER_IP_HOUR * 2) {
+      return reply(429, { error: "Too many messages. Please try again later." });
+    }
+    try {
+      await sendMessage({ replyTo: email, name, text });
+    } catch (e) {
+      console.error("message failed", e && e.name);
+      return reply(502, { error: "Couldn't send that. Try again later." });
+    }
     return reply(200, { ok: true, contact: env.CONTACT });
   }
 
@@ -85,6 +115,7 @@ export function createHandler({ store, sendMail, env, now = () => Math.floor(Dat
     const ip = http.sourceIp || "unknown";
     if (http.path === "/send") return send(body, ip);
     if (http.path === "/verify") return verify(body);
+    if (http.path === "/message") return message(body, ip);
     return reply(404, { error: "Not found." });
   };
 }

@@ -1,9 +1,8 @@
 # Email-reveal backend
 
-Visitors enter their own email, get a 6-digit code by email, and only then see the contact address.
-The address lives only in a Lambda environment variable, never in this repo.
+Visitors enter their own email, get a 6-digit code, then write a message in a short draft form. The site's Lambda emails the message to you (Reply-To is their verified address). Your address is only shown on the "Sent" screen afterwards, and it lives only in a Lambda environment variable, never in this repo.
 
-Flow: browser -> Lambda Function URL (`/send`, `/verify`) -> DynamoDB (hashed codes, rate counters, auto-expiring) and SES (sends the code).
+Flow: browser -> Lambda Function URL (`/send`, `/verify`, `/message`) -> DynamoDB (hashed codes, rate counters, auto-expiring) and SES (sends the code).
 
 ## Cost
 Lambda (1M requests/month) and DynamoDB (25 GB, on-demand) are in the always-free tier. SES is about US$0.10 per 1,000 emails. The code caps sending at 150 emails/day, so the worst case is about US$0.015/day. Set an AWS Budget alert at US$1 anyway.
