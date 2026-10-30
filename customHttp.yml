@@ -1,12 +1,10 @@
 # Security headers for AWS Amplify Hosting (it reads this file from the repo root).
-# connect-src names the Lambda Function URL host so the contact form can reach it.
-# After deploying the backend, replace https://*.on.aws with your exact Function URL, e.g.
-# https://abc123.lambda-url.ap-southeast-1.on.aws, to tighten it.
+# connect-src allows the contact form to reach its form service (api.web3forms.com) and nothing else.
 customHeaders:
   - pattern: '**'
     headers:
       - key: Content-Security-Policy
-        value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://*.on.aws; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        value: "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; media-src 'self'; font-src 'self'; connect-src 'self' https://api.web3forms.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
       - key: X-Content-Type-Options
         value: nosniff
       - key: X-Frame-Options

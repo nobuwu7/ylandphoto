@@ -259,3 +259,5 @@ body.lb-open { overflow: hidden; }
   .theme-btn { order: 2; margin-left: auto; }
   nav { order: 3; width: 100%; }
 }
+.rv-top { justify-content: space-between; }
+.rv-top h3 { margin: 0; }

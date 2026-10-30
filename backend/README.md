@@ -1,3 +1,5 @@
+> **Not used by the live site.** The contact form now uses a form service. This backend is kept as a tested reference (Lambda, DynamoDB, SES, emailed codes, spam filter).
+
 # Email-reveal backend
 
 Visitors enter their own email, get a 6-digit code, then write a message in a short draft form. The site's Lambda emails the message to you (Reply-To is their verified address). Your address is only shown on the "Sent" screen afterwards, and it lives only in a Lambda environment variable, never in this repo.

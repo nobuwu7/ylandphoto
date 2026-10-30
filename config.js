@@ -1,3 +1,3 @@
-// Public setting. After deploying the backend (see backend/README.md), paste the
-// Lambda Function URL here, e.g. "https://abc123.lambda-url.ap-southeast-1.on.aws".
-window.SITE_CONFIG = { revealApi: "" };
+// Public setting. Paste your Web3Forms access key between the quotes (it is a public key, safe in the repo;
+// it only lets people send a message to the email you registered it with).
+window.SITE_CONFIG = { contactKey: "" };
