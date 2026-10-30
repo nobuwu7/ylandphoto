@@ -244,8 +244,10 @@ body.lb-open { overflow: hidden; }
 .linkbtn[disabled] { opacity: .5; cursor: default; text-decoration: none; }
 
 /* Theme switch in the header */
-.theme-btn { background: none; border: 1px solid var(--line-strong); color: var(--muted); padding: 6px 12px; font: 600 0.8rem var(--sans);
-  text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; }
+.theme-btn { background: none; border: 1px solid var(--line-strong); color: var(--muted); width: 40px; height: 40px; padding: 0;
+  display: inline-grid; place-items: center; border-radius: 50%; cursor: pointer; }
+.theme-btn .i-moon, :root[data-theme="light"] .theme-btn .i-sun { display: none; }
+:root[data-theme="light"] .theme-btn .i-moon { display: block; }
 .theme-btn:hover, .theme-btn:focus-visible { color: var(--ink); border-color: var(--ink); }
 .theme-btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 .bar-right { display: flex; align-items: center; gap: 22px; }

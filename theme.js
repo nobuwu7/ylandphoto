@@ -16,7 +16,6 @@
     if (!b) return;
     function label() {
       var light = document.documentElement.getAttribute("data-theme") === "light";
-      b.textContent = light ? "Dark" : "Light";
       b.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
     }
     label();
