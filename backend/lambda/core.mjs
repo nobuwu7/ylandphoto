@@ -1,4 +1,5 @@
 // Email-reveal logic. Storage and mail are injected so this runs in tests without AWS.
+import { screen, defang } from "./filter.mjs";
 import { createHmac, randomInt, timingSafeEqual } from "node:crypto";
 
 const CODE_TTL = 600;        // a code lasts 10 minutes
@@ -98,8 +99,14 @@ export function createHandler({ store, sendMail, sendMessage, env, now = () => M
         (await store.incr("rate#ip#" + ip + "#" + hour, 7200)) > PER_IP_HOUR * 2) {
       return reply(429, { error: "Too many messages. Please try again later." });
     }
+    const verdict = screen({ name, text, email });
+    if (!verdict.ok) {
+      // Held back: nothing is emailed to me. It sits in the table for 30 days in case it was a false alarm.
+      await store.put("quarantine#" + now() + "#" + randomInt(0, 1e9), { email, name, text, reasons: verdict.reasons, ttl: now() + 86400 * 30 });
+      return reply(422, { error: "That message looks like spam, so it wasn't sent. Please remove any links and try again, or message me on Instagram." });
+    }
     try {
-      await sendMessage({ replyTo: email, name, text });
+      await sendMessage({ replyTo: email, name, text: defang(text), checked: verdict });
     } catch (e) {
       console.error("message failed", e && e.name);
       return reply(502, { error: "Couldn't send that. Try again later." });

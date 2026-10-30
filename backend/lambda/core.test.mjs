@@ -76,3 +76,42 @@ test("verify attempts are limited per network", async () => {
   for (let i = 0; i < 31; i++) last = await s.call("/verify", { email: `u${i}@b.co`, code: "000000" });
   assert.equal(last.statusCode, 429);
 });
+
+async function viaMessage(s, name, message, email = "a@b.co") {
+  await s.call("/send", { email }); const code = s.mails.at(-1).code;
+  const v = await s.call("/verify", { email, code });
+  return s.call("/message", { email, token: v.json.token, name, message });
+}
+
+test("a normal enquiry gets through", async () => {
+  const s = setup();
+  const r = await viaMessage(s, "Sam Lee", "Hi Aubs, I run a student society and we need a photographer for our dinner on 12 Dec. Are you free?");
+  assert.equal(r.statusCode, 200); assert.equal(s.sent.length, 1);
+});
+
+test("one plain link is allowed but defanged", async () => {
+  const s = setup();
+  const r = await viaMessage(s, "Sam", "Our event page is https://example.com/dinner and we would love coverage.");
+  assert.equal(r.statusCode, 200);
+  assert.match(s.sent[0].text, /hxxps:\/\/example\[\.\]com/); assert.doesNotMatch(s.sent[0].text, /https:\/\//);
+});
+
+test("phishing and spam are held back, not emailed", async () => {
+  const bad = [
+    "URGENT: verify your account now at https://secure-login.top/verify or it will be suspended",
+    "Click here http://bit.ly/3abc to claim your gift card prize",
+    "Check https://a.com and https://b.com and https://c.com for our offer",
+    "Hello <script>alert(1)</script> I need photos",
+    "Send the bitcoin wire transfer immediately, act now, invoice attached",
+    "Open http://192.168.4.7/pay for the invoice please"
+  ];
+  for (const [i, m] of bad.entries()) {
+    const s = setup(); const r = await viaMessage(s, "Sam", m, `u${i}@b.co`);
+    assert.equal(r.statusCode, 422, m); assert.equal(s.sent.length, 0, m);
+  }
+});
+
+test("disposable addresses are blocked", async () => {
+  const s = setup(); const r = await viaMessage(s, "Sam", "Hello, I would love to book you for an event.", "x@mailinator.com");
+  assert.equal(r.statusCode, 422);
+});

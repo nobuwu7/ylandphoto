@@ -18,6 +18,9 @@ Lambda (1M requests/month) and DynamoDB (25 GB, on-demand) are in the always-fre
 4. Paste the Function URL into `config.js` as `revealApi`, commit, and push. Amplify redeploys.
 5. When you add a custom domain later, change `ORIGIN` to match it.
 
+## Spam and phishing filter
+Before a message is emailed to you, `lambda/filter.mjs` scores it. It blocks more than one link, shortened or oddly-ended links, raw IP links, HTML or script, disposable email domains, and common phishing or scam wording (verify your account, gift cards, crypto, wire transfer, urgent, SEO offers and so on). Blocked messages are not emailed: they are saved for 30 days in the `reveal` table under keys starting `quarantine#`, with the reasons, so you can look for false alarms in the DynamoDB console (Explore items). Messages that pass arrive with `[Screened]` in the subject, and any link in them is defanged (`hxxps://example[.]com`) so it can't be clicked by accident. This is a heuristic filter, so still treat links and attachments from strangers with care.
+
 ## Test
 `node --test lambda/core.test.mjs`
 

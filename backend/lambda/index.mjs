@@ -46,14 +46,14 @@ async function sendMail(to, code) {
   }));
 }
 
-async function sendMessage({ replyTo, name, text }) {
+async function sendMessage({ replyTo, name, text, checked }) {
   await ses.send(new SendEmailCommand({
     FromEmailAddress: env.FROM,
     Destination: { ToAddresses: [env.CONTACT] },
     ReplyToAddresses: [replyTo],
     Content: { Simple: {
-      Subject: { Data: "Portfolio message from " + name },
-      Body: { Text: { Data: name + " (" + replyTo + ", verified by emailed code) wrote:\n\n" + text + "\n" } }
+      Subject: { Data: "[Screened] Portfolio message from " + name },
+      Body: { Text: { Data: name + " (" + replyTo + ", verified by emailed code, passed the spam filter with score " + checked.score + "/3) wrote:\n\n" + text + "\n" } }
     } }
   }));
 }
