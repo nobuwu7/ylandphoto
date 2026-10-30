@@ -179,24 +179,67 @@
   var exposure = 0;
   var audio = null;
 
+  // Recorded shutter clicks, picked at random (never the same one more than twice in a row).
+  // To add more, drop the file in sounds/ and add its path below.
+  // They are fetched at load and decoded on the first press; if anything fails we fall back to a synthesised click.
+  var CLICKS = ["sounds/click-1.mp3", "sounds/click-2.mp3"];
+  var raw = CLICKS.map(function (u) {
+    return fetch(u).then(function (r) { return r.ok ? r.arrayBuffer() : null; }).catch(function () { return null; });
+  });
+  var decoded = null;
+  var lastClick = -1, streak = 0;
+
+  function context() {
+    var Ctx = window.AudioContext || window.webkitAudioContext;
+    if (!Ctx) return null;
+    audio = audio || new Ctx();
+    if (audio.state === "suspended") audio.resume();
+    return audio;
+  }
+
+  function decodeAll(ctx) {
+    if (!decoded) {
+      decoded = Promise.all(raw).then(function (bufs) {
+        return Promise.all(bufs.map(function (b) {
+          return b ? new Promise(function (ok) { ctx.decodeAudioData(b.slice(0), ok, function () { ok(null); }); }) : null;
+        }));
+      });
+    }
+    return decoded;
+  }
+
+  function synthClick(ctx) {
+    var t = ctx.currentTime;
+    [0, 0.07].forEach(function (offset, n) {
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = "square";
+      osc.frequency.value = n === 0 ? 1800 : 900;
+      gain.gain.setValueAtTime(0.08, t + offset);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t + offset);
+      osc.stop(t + offset + 0.06);
+    });
+  }
+
   function click() {
     try {
-      var Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return;
-      audio = audio || new Ctx();
-      var t = audio.currentTime;
-      [0, 0.07].forEach(function (offset, n) {
-        var osc = audio.createOscillator();
-        var gain = audio.createGain();
-        osc.type = "square";
-        osc.frequency.value = n === 0 ? 1800 : 900;
-        gain.gain.setValueAtTime(0.08, t + offset);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + offset + 0.05);
-        osc.connect(gain);
-        gain.connect(audio.destination);
-        osc.start(t + offset);
-        osc.stop(t + offset + 0.06);
-      });
+      var ctx = context();
+      if (!ctx) return;
+      decodeAll(ctx).then(function (bufs) {
+        var ready = bufs.map(function (b, i) { return b ? i : -1; }).filter(function (i) { return i >= 0; });
+        if (!ready.length) { synthClick(ctx); return; }
+        var pool = ready.length > 1 && streak >= 2 ? ready.filter(function (i) { return i !== lastClick; }) : ready;
+        var pick = pool[Math.floor(Math.random() * pool.length)];
+        streak = pick === lastClick ? streak + 1 : 1;
+        lastClick = pick;
+        var src = ctx.createBufferSource();
+        src.buffer = bufs[lastClick];
+        src.connect(ctx.destination);
+        src.start();
+      }).catch(function () { synthClick(ctx); });
     } catch (e) { /* audio is optional */ }
   }
 
