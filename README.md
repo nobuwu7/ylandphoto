@@ -28,6 +28,11 @@ Then open http://localhost:8780/.
 
 Put web-sized copies (about 2000 px wide) in a `photos/` folder, then set each `src` in `photos.js`, for example `src: "photos/frame-01.jpg"`. Originals stay in Google Drive. A blank `src` shows a placeholder frame.
 
+## Credits
+
+- Shutter click sounds (`sounds/`): @1cho.mejia ("SFX for Grid").
+- Photos: Aubrey Yee, except where a photo's caption names another photographer.
+
 ## Hosting
 
 To be hosted on AWS Amplify Hosting (not deployed yet).
