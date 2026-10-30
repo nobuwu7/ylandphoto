@@ -52,6 +52,9 @@ test("cooldown, honeypot, bad email, wrong origin", async () => {
   await s.call("/send", { email: "x@y.co", website: "spam" }); assert.equal(s.mails.length, 1);
   assert.equal((await s.call("/send", { email: "nope" })).statusCode, 400);
   assert.equal((await s.call("/send", { email: "q@r.co" }, { origin: "https://evil.test" })).statusCode, 403);
+  const noOrigin = await createHandler({ store: {}, sendMail() {}, env: { PEPPER: "p", ORIGIN: "https://site.test" } })(
+    { requestContext: { http: { method: "POST", path: "/send" } }, headers: {}, body: '{"email":"a@b.co"}' });
+  assert.equal(noOrigin.statusCode, 403);                          // curl with no Origin header
 });
 
 test("per-IP hourly limit", async () => {
@@ -114,4 +117,12 @@ test("phishing and spam are held back, not emailed", async () => {
 test("disposable addresses are blocked", async () => {
   const s = setup(); const r = await viaMessage(s, "Sam", "Hello, I would love to book you for an event.", "x@mailinator.com");
   assert.equal(r.statusCode, 422);
+});
+
+test("fields must be plain text", async () => {
+  const s = setup();
+  for (const body of [{ email: ["a@b.co"] }, { email: { x: 1 } }, { email: "a@b.co", code: 123456 }, [], "x"]) {
+    const r = await s.call("/send", body); assert.equal(r.statusCode, 400, JSON.stringify(body));
+  }
+  assert.equal(s.mails.length, 0);
 });

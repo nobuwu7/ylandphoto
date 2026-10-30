@@ -118,11 +118,15 @@ export function createHandler({ store, sendMail, sendMessage, env, now = () => M
     const http = (event.requestContext && event.requestContext.http) || {};
     if (http.method === "OPTIONS") return reply(204, {});
     if (http.method !== "POST") return reply(405, { error: "Not found." });
+    // Browsers always send Origin on a cross-site POST. Requiring it turns away casual scripts (curl and the like).
     const origin = event.headers && (event.headers.origin || event.headers.Origin);
-    if (origin && origin !== env.ORIGIN) return reply(403, { error: "Not allowed." });
+    if (origin !== env.ORIGIN) return reply(403, { error: "Not allowed." });
     let body;
     try { body = JSON.parse(event.isBase64Encoded ? Buffer.from(event.body, "base64").toString() : event.body || "{}"); }
     catch { return reply(400, { error: "Bad request." }); }
+    // Every field is plain text. Arrays and objects are refused, not coerced.
+    if (!body || typeof body !== "object" || Array.isArray(body) ||
+        Object.values(body).some(v => v !== null && typeof v !== "string")) return reply(400, { error: "Bad request." });
     const ip = http.sourceIp || "unknown";
     if (http.path === "/send") return send(body, ip);
     if (http.path === "/verify") return verify(body, ip);
