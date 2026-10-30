@@ -182,3 +182,25 @@ body.lb-open { overflow: hidden; }
   body { font-size: 19px; }
   main, footer { max-width: 1320px; }
 }
+
+/* Email reveal dialog */
+.linkbtn { background: none; border: 0; padding: 0; font: inherit; color: inherit; text-decoration: underline; cursor: pointer; }
+.linkbtn:hover, .linkbtn:focus-visible { color: var(--ink); }
+.reveal { background: var(--panel); color: var(--ink); border: 1px solid var(--line); padding: 28px; width: min(92vw, 460px); }
+.reveal::backdrop { background: rgba(0, 0, 0, 0.75); }
+.reveal h3 { margin: 0 0 8px; font-size: 1.8rem; letter-spacing: -0.03em; }
+.reveal-x { position: absolute; top: 12px; right: 12px; margin: 0; }
+.reveal-help { color: var(--muted); margin: 0 0 18px; }
+.reveal-form { display: grid; gap: 10px; }
+.reveal-form label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.reveal-form input[type="email"], .reveal-form input[type="text"] { background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+  padding: 12px 14px; font: 1.1rem var(--sans); width: 100%; }
+#reveal-code { letter-spacing: 0.4em; font-size: 1.5rem; text-align: center; }
+.reveal-form input:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+.btn { background: var(--ink); color: var(--bg); border: 0; padding: 12px 18px; font: 700 0.95rem var(--sans); letter-spacing: 0.04em; cursor: pointer; }
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.reveal-out { margin: 4px 0 0; font-size: 1.4rem; font-weight: 800; word-break: break-all; }
+.reveal-msg { min-height: 1.4em; margin: 14px 0 0; color: var(--muted); font-size: 0.9rem; }
+.reveal-msg.bad { color: #ff8a80; }
+.reveal-form[hidden], .reveal-out[hidden], .reveal-help[hidden] { display: none; }

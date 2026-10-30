@@ -171,7 +171,7 @@
     <p class="foot-mark" aria-hidden="true">Aubrey Yee</p>
     <div class="foot-row">
       <p>&copy; 2026 Aubrey (Aubs) &middot; ylandphoto</p>
-      <p><a href="mailto:email-hidden">email-hidden</a> &middot; <a href="https://instagram.com/y.rey_info" rel="noopener">Instagram @y.rey_info</a> &middot; <a href="https://github.com/nobuwu7" rel="noopener">GitHub @nobuwu7</a></p>
+      <p><button id="reveal-open" class="linkbtn" type="button">Email me</button> &middot; <a href="https://instagram.com/y.rey_info" rel="noopener">Instagram @y.rey_info</a> &middot; <a href="https://github.com/nobuwu7" rel="noopener">GitHub @nobuwu7</a></p>
     </div>
   </footer>
 
@@ -211,7 +211,31 @@
     <p class="roll" id="print-roll"></p>
   </aside>
 
+
+  <!-- Email reveal: the visitor proves their address with a 6-digit code before mine is shown -->
+  <dialog id="reveal" class="reveal" aria-labelledby="reveal-title">
+    <form method="dialog" class="reveal-x"><button class="lb-close" aria-label="Close">Close &times;</button></form>
+    <h3 id="reveal-title">Want my email?</h3>
+    <p id="reveal-help" class="reveal-help">It keeps the bots out. Give me your email and I'll send you a 6-digit code.</p>
+    <form id="reveal-send" class="reveal-form" novalidate>
+      <label for="reveal-addr">Your email</label>
+      <input id="reveal-addr" type="email" autocomplete="email" inputmode="email" required>
+      <input id="reveal-hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+      <button class="btn" type="submit">Send code</button>
+    </form>
+    <form id="reveal-check" class="reveal-form" hidden novalidate>
+      <label for="reveal-code">6-digit code</label>
+      <input id="reveal-code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
+      <button class="btn" type="submit">Show my email</button>
+      <button id="reveal-again" class="linkbtn" type="button">Use a different email</button>
+    </form>
+    <p id="reveal-out" class="reveal-out" hidden></p>
+    <p id="reveal-msg" class="reveal-msg" role="status" aria-live="polite"></p>
+  </dialog>
+
+  <script src="config.js"></script>
   <script src="photos.js"></script>
   <script src="app.js"></script>
+  <script src="reveal.js"></script>
 </body>
 </html>
