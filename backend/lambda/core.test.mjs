@@ -70,3 +70,9 @@ test("message needs a valid, unexpired token for that address", async () => {
   assert.equal((await s.call("/message", { ...msg, email: "a@b.co", token: json.token })).statusCode, 403);
   assert.equal(s.sent.length, 0);
 });
+
+test("verify attempts are limited per network", async () => {
+  const s = setup(); let last;
+  for (let i = 0; i < 31; i++) last = await s.call("/verify", { email: `u${i}@b.co`, code: "000000" });
+  assert.equal(last.statusCode, 429);
+});

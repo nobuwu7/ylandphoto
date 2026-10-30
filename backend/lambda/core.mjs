@@ -8,6 +8,7 @@ const PER_EMAIL_HOUR = 3;
 const PER_IP_HOUR = 10;
 const TOKEN_TTL = 900;       // after verifying, 15 minutes to write the message
 const MSG_PER_HOUR = 3;
+const VERIFY_PER_IP_HOUR = 30;  // code guesses from one network, across any addresses
 const GLOBAL_DAY = 150;      // hard ceiling on emails per day, so cost can never run away
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
@@ -57,10 +58,13 @@ export function createHandler({ store, sendMail, sendMessage, env, now = () => M
     return reply(200, { ok: true });
   }
 
-  async function verify(body) {
+  async function verify(body, ip) {
     const email = String(body.email || "").trim().toLowerCase();
     const code = String(body.code || "").replace(/\D/g, "");
     if (!EMAIL_RE.test(email) || code.length !== 6) return reply(400, { error: "That code didn't work." });
+    if ((await store.incr("rate#verify#" + ip + "#" + Math.floor(now() / 3600), 7200)) > VERIFY_PER_IP_HOUR) {
+      return reply(429, { error: "Too many tries. Please wait a while and try again." });
+    }
 
     const item = await store.get("code#" + email);
     if (!item || item.ttl < now()) return reply(400, { error: "That code expired. Ask for a new one." });
@@ -114,7 +118,7 @@ export function createHandler({ store, sendMail, sendMessage, env, now = () => M
     catch { return reply(400, { error: "Bad request." }); }
     const ip = http.sourceIp || "unknown";
     if (http.path === "/send") return send(body, ip);
-    if (http.path === "/verify") return verify(body);
+    if (http.path === "/verify") return verify(body, ip);
     if (http.path === "/message") return message(body, ip);
     return reply(404, { error: "Not found." });
   };

@@ -216,3 +216,4 @@ body.lb-open { overflow: hidden; }
 .reveal-msg { min-height: 1.4em; margin: 6px 24px 20px; color: var(--muted); font-size: 0.9rem; }
 .reveal-msg.bad { color: #ff8a80; }
 @media (max-width: 760px) { .rv-code { gap: 6px; } .rv-pane { padding: 22px 16px 4px; } .rv-top { padding: 14px 16px; } .reveal-msg { margin: 6px 16px 18px; } }
+.linkbtn[disabled] { opacity: .5; cursor: default; text-decoration: none; }

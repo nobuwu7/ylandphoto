@@ -58,6 +58,29 @@
   dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
   $("reveal-again").addEventListener("click", function () { show(0); addr.focus(); });
 
+  // "Send a new code" unlocks after the server's 60-second cooldown.
+  var resend = $("reveal-resend"), timer = null;
+  function cooldown() {
+    var left = 60;
+    clearInterval(timer);
+    resend.disabled = true;
+    timer = setInterval(function () {
+      left -= 1;
+      if (left <= 0) { clearInterval(timer); resend.disabled = false; resend.textContent = "Send a new code"; }
+      else resend.textContent = "Send a new code (" + left + "s)";
+    }, 1000);
+    resend.textContent = "Send a new code (60s)";
+  }
+  resend.addEventListener("click", function () {
+    guard(resend, function (done) {
+      post("/send", { email: email, website: "" }).then(function (j) {
+        done();
+        if (j.ok) { say("New code sent."); cooldown(); digits.forEach(function (d) { d.value = ""; }); digits[0].focus(); }
+        else say(j.error || "Couldn't send that. Try again in a minute.", true);
+      }).catch(function () { done(); say("Couldn't reach the server.", true); });
+    });
+  });
+
   // Step 1: ask for a code
   $("reveal-send").addEventListener("submit", function (e) {
     e.preventDefault();
@@ -70,7 +93,7 @@
         if (j.ok) {
           email = v;
           $("rv-sent").textContent = "Enter the 6-digit code sent to " + v + ". It lasts 10 minutes, and it may be in spam.";
-          show(1); digits[0].focus();
+          show(1); cooldown(); digits[0].focus();
         } else say(j.error || "Couldn't send that. Try again in a minute.", true);
       }).catch(function () { done(); say("Couldn't reach the server. Try again in a minute.", true); });
     });
