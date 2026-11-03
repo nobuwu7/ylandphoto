@@ -193,8 +193,9 @@ body.lb-open { overflow: hidden; }
   .reels { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
   .layout-rows .tile { flex-basis: calc(var(--ar) * 150px); }
   .lb-top { padding: 10px 16px; }
-  .lb-body { grid-template-columns: 1fr; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; padding: 0 12px 12px; }
-  .lb-stage img { max-height: calc(100vh - 340px); }
+  /* The photo and its details stack and scroll together, so a tall photo never covers the text. */
+  .lb-body { grid-template-columns: 1fr; grid-template-rows: max-content max-content; align-content: start; gap: 12px; padding: 0 12px 20px; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .lb-stage img { max-height: 55vh; max-height: 55dvh; }
   .lb-info { align-self: stretch; padding: 16px 18px 18px; }
   .lb-info h3 { font-size: 1.25rem; }
   .lb-nav { width: 44px; height: 44px; }
