@@ -261,3 +261,25 @@ body.lb-open { overflow: hidden; }
 }
 .rv-top { justify-content: space-between; }
 .rv-top h3 { margin: 0; }
+
+/* Booking: hero buttons, header button, covered strip, Work with me */
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin: 18px 0 14px !important; }
+.cta { background: var(--ink); color: var(--bg); border: 2px solid var(--ink); padding: 15px 26px; font: 800 1.05rem var(--sans); letter-spacing: -0.01em; cursor: pointer; }
+.cta:hover { background: var(--bg); color: var(--ink); }
+.cta:focus-visible, .cta-ghost:focus-visible, .nav-cta:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.cta-ghost { color: var(--ink); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.nav-cta { background: var(--ink); color: var(--bg); border: 0; padding: 10px 18px; font: 800 0.85rem var(--sans); letter-spacing: 0.04em; text-transform: uppercase; cursor: pointer; }
+.covered { padding: 8px 0 40px; }
+.covered-h { margin: 0 0 12px; color: var(--ink); font-size: 1.5rem; }
+.covered ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; }
+.covered li { border: 1px solid var(--line-strong); padding: 8px 14px; margin: 0; font-size: 0.95rem; }
+.work-note { max-width: 62ch; margin: 22px 0 0; font-size: 1.1rem; }
+.panel ol { padding-left: 1.2em; margin: 0; }
+.panel p { margin: 0; }
+@media (max-width: 760px) {
+  .nav-cta { order: 2; margin-left: auto; padding: 9px 14px; }
+  .theme-btn { margin-left: 0; }
+  .cta { width: 100%; }
+}
+nav { flex-wrap: wrap; }
+nav a { white-space: nowrap; }

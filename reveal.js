@@ -1,9 +1,9 @@
 (function () {
   "use strict";
 
-  var openBtn = document.getElementById("reveal-open");
+  var openers = document.querySelectorAll("[data-contact]");
   var dlg = document.getElementById("reveal");
-  if (!openBtn || !dlg || !dlg.showModal) return;
+  if (!openers.length || !dlg || !dlg.showModal) return;
 
   var key = (window.SITE_CONFIG || {}).contactKey || "";
   var $ = function (id) { return document.getElementById(id); };
@@ -11,12 +11,13 @@
 
   function say(text, bad) { msg.textContent = text; msg.className = "reveal-msg" + (bad ? " bad" : ""); }
 
-  openBtn.addEventListener("click", function () {
+  function openContact() {
     $("rv-form").hidden = false; $("rv-done").hidden = true; say("");
     if (!key) say("The contact form isn't switched on yet. Please check back soon.", true);
     dlg.showModal();
     $("rv-name").focus();
-  });
+  }
+  openers.forEach(function (b) { b.addEventListener("click", openContact); });
   dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
 
   form.addEventListener("submit", function (e) {

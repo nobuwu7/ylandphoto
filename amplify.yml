@@ -12,6 +12,8 @@ frontend:
       - index.html
       - '*.css'
       - '*.js'
+      - favicon.svg
+      - og.jpg
       - 'photos/**/*'
       - 'videos/**/*'
       - 'sounds/**/*'
