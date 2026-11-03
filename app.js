@@ -192,6 +192,8 @@
   function context() {
     var Ctx = window.AudioContext || window.webkitAudioContext;
     if (!Ctx) return null;
+    // iPhones mute Web Audio when the ring/silent switch is on. Asking for "playback" makes the click play anyway.
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) { /* optional */ }
     audio = audio || new Ctx();
     if (audio.state === "suspended") audio.resume();
     return audio;
